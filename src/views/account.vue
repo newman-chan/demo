@@ -1,0 +1,155 @@
+<!-- 账号管理 -->
+<template>
+  <div class="account">
+    <!-- 面包屑 -->
+    <div class="bread">
+      管理员 > 账号设置
+    </div>
+    <div class="container">
+      <div class="admin">
+        <div class="box1">
+          <div class="head"></div>
+          <div class="change">
+            管理员1
+          </div>
+          <div class="change">
+            更换图片
+          </div>
+        </div>
+        <div class="box2">
+          <div>
+            <span>昵称</span>
+            <span>是的方式方法家</span>
+          </div>
+          <div>
+            <span>手机号</span>
+            <span>是的方式方法家</span>
+          </div>
+          <div>
+            <span>性别</span>
+            <span>是的方式方法家</span>
+          </div>
+          <div>
+            <span>创建时间</span>
+            <span>是的方式方法家</span>
+          </div>
+        </div>
+        <div class="box2">
+          <div>
+            <span>姓名</span>
+            <span>是的方式方法家</span>
+          </div>
+          <div>
+            <span>邮箱</span>
+            <span>是的方式方法家</span>
+          </div>
+          <div>
+            <span>角色名称</span>
+            <span>是的方式方法家</span>
+          </div>
+          <div>
+            <span>最后登录时间</span>
+            <span>是的方式方法家</span>
+          </div>
+        </div>
+      </div>
+      <div class="save">
+        修改密码
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {};
+</script>
+
+<style lang="less" scoped>
+.account {
+  // width: 1100px;
+  padding: 20px;
+
+  .bread {
+    font-size: 18px;
+    font-weight: 700;
+    padding-bottom: 30px;
+  }
+  .container {
+
+    font-size: 16px;
+
+    .admin {
+      display: flex;
+      // background-color: #e6e;
+      width: 100%;
+      height: 280px;
+      border: 1px solid #ccc;
+      
+      .box1 {
+        flex: 2;
+        border-right: 1px solid #ccc;
+        // background-color: aqua;
+        .head {
+          height: 140px;
+          width: 140px;
+          background-color: aqua;
+          margin: 40px auto 30px;
+          border-radius: 70px;
+        }
+        .change {
+          text-align: center;
+          font-size: 16px;
+
+          &:last-child {
+            color: blue;
+            cursor: pointer;
+            text-decoration: underline;
+            padding-top: 10px;
+          }
+        }
+      }
+      .box2 {
+        font-size: 16px;
+        flex: 3;
+        display: flex;
+        flex-direction: column;
+        div {
+          flex: 1;
+          display: flex;
+          // justify-content: center;
+          // align-items: center;
+          &:not(:last-child){
+            border-bottom: 1px solid #ccc;
+          }
+          span {
+            flex: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            &:first-child {
+              flex: 1;
+              width: 110px;
+              border-right: 1px solid #ccc;
+            }
+          }
+        }
+        &:last-child {
+          border-left: 1px solid #ccc;
+        }
+      }
+    }
+    .save{
+      margin: 60px;
+      width: 100px;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      background-color: #77b79f;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+    }
+  }
+}
+</style>
