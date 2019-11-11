@@ -1,5 +1,14 @@
 <template>
   <div class="home">
+    <div class="mask" v-show="isShow">
+        <div class="popup">
+            <div class="message">请确认是否退出</div>
+            <div class="btn">
+                <div class="btn__left" @click="handleBtn(1)">确认</div>
+                <div class="btn__right" @click="handleBtn(2)">取消</div>
+            </div>
+        </div>
+    </div>  
     <div class="aside">
       <div class="logo"></div>
       <div
@@ -43,7 +52,8 @@ export default {
         { title: "意见反馈", url: "/index/opinion" },
         { title: "接口管理", url: "/index/interface" }
       ],
-      activeIndex: 0
+      activeIndex: 0,
+      isShow: false
     };
   },
   methods: {
@@ -53,8 +63,18 @@ export default {
       this.$router.push(url);
     },
     loginout() {
-      localStorage.removeItem("picc_token");
-      this.$router.push({ name: "Login" });
+        this.isShow = true;
+    },
+    handleBtn(index) {
+        if(index === 1) {
+            localStorage.removeItem('picc_token');
+            this.$router.push({
+                path: '/login'
+            })
+        }
+        if(index === 2) {
+            this.isShow = false;
+        }
     }
   },
   updated () {
@@ -76,7 +96,48 @@ export default {
   width: 100%;
   height: 100%;
   padding-bottom: 60px;
-
+  .mask {
+      position: fixed;
+      width: 100%;
+      top:0;
+      bottom: 0;
+      z-index: 100;
+      background: rgba(0,0,0,0.6);
+      .popup {
+          width: 300px;
+          height: 180px;
+          background: #fff;
+          box-shadow: 1px 1px 1px #000;
+          margin: 200px auto;
+          text-align: center;
+          font-weight: bold;
+          .message {
+              font-size: 24px;
+              height: 120px;
+              line-height: 120px;
+          }
+          .btn {
+              height: 40px;
+              padding: 10px;
+              div {
+                  width: 100px;
+                  height: 40px;
+                  line-height: 40px;
+                  border-radius: 20px;
+                  background: #ccc;
+                  color: #333;
+                  font-size: 20px;
+                  cursor:pointer;
+              }
+              &__left {
+                  float: left;
+              }
+              &__right {
+                  float: right;
+              }
+          }
+      }
+  }
   .aside {
     width: 200px;
     // height: 100vh;

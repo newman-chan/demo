@@ -6,7 +6,10 @@
       <div class="bread">
         租客详情
       </div>
-      <div class="right-btn">
+      <div class="right-btn" @click="handleUse(1)" v-if="isUse">
+        启用账户
+      </div>
+      <div class="right-btn" @click="handleUse(0)" v-else>
         停用账户
       </div>
     </div>
@@ -14,7 +17,7 @@
       <div class="admin">
         <div class="box1">
           <div class="head">
-            <img src="" alt="">
+            <img :src="nameList.avatar" alt="">
           </div>
           <div class="change">
             管理员1
@@ -30,21 +33,21 @@
           </div>
           <div>
             <span>生日</span>
-            <span>1990年3月22日</span>
+            <span>{{nameList.birthday}}</span>
           </div>
           <div>
             <span>性别</span>
-            <span>男</span>
+            <span>{{nameList.sex}}</span>
           </div>
           <div>
             <span>身份证号码</span>
-            <span>123456789098765432</span>
+            <span>{{nameList.id_card}}</span>
           </div>
         </div>
         <div class="box2">
           <div>
             <span>手机号</span>
-            <span>12345678909</span>
+            <span>{{nameList.phone}}</span>
           </div>
           <div>
             <span>年龄</span>
@@ -52,11 +55,11 @@
           </div>
           <div>
             <span>注册时间</span>
-            <span>2019-01-01 11:11:11</span>
+            <span>{{nameList.create_time}}</span>
           </div>
           <div>
             <span>共惠金币</span>
-            <span>100</span>
+            <span>{{nameList.gold}}</span>
           </div>
         </div>
       </div>
@@ -64,14 +67,13 @@
         <el-table-column label="租房信息">
           <el-table-column
             type="index"
-            :index="indexMethod"
             label="序号"
             width="50"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="room_title"
             label="签约房间"
             width="180"
             align="center"
@@ -94,14 +96,14 @@
           <el-table-column prop="name" label="房东身份证" width="160" align="center">
           </el-table-column>
           <el-table-column
-            prop="name"
+            prop="start_time"
             label="起租时间"
             width="110"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="name"
+            prop="end_time"
             label="到租时间"
             width="110"
             align="center"
@@ -115,15 +117,15 @@
           >
           </el-table-column>
           <el-table-column
-            prop="name"
+            prop="is_insured"
             label="是否投保"
             width="80"
             align="center"
           >
           </el-table-column>
-          <el-table-column prop="name" label="保单信息" width="159" align="center">
+          <el-table-column prop="insured_remark" label="保单信息" width="159" align="center">
           </el-table-column>
-          <el-table-column prop="name" label="入住状态" width="159" align="center">
+          <el-table-column prop="status" label="入住状态" width="159" align="center">
           </el-table-column>
         </el-table-column>
       </el-table>
@@ -135,15 +137,46 @@
 export default {
   data () {
     return {
-      nameList:[]  
+      nameList:{},
+      tableData: [],
+      isUse: false
     }
+  },
+  methods: {
+      handleUse(type) {
+          this.$axios({
+              url: '/api/admin/tenant',
+              method: 'post',
+              data: {
+                  uid: this.nameList.id,
+                  type: type
+              } 
+          }).then(res=>{
+              console.log(res);
+              this.isUse = !this.isUse;
+          })
+      }
   },
   mounted () {
     // console.log(this.$route.query.data);
-    this.nameList =this.$route.query.data
-    console.log(this.nameList);
-    
-    
+    this.nameList =this.$route.query.data;
+    this.isUse = this.nameList.status === 1 ? false : true;
+    this.$axios({
+        url: '/api/admin/tenant',
+        methods: 'get',
+        params: {
+            tenant_id: this.nameList.tenant_id
+        }
+    }).then(res=>{
+        console.log(res)
+        res.data.data.list.forEach((v,i)=>{
+            this.tableData.push(v);
+            this.tableData[i].is_insured =
+                this.tableData[i].is_insured == 1 ? '是' : '否';
+            this.tableData[i].status = 
+                this.tableData[i].status == 1 ? '租房中' : this.tableData[i].status == 2 ? '申请中' : this.tableData[i].status == 3 ? '已退租' : '已拒绝'
+        })
+    })
   }
 };
 </script>

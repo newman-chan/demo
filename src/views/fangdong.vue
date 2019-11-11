@@ -37,6 +37,7 @@
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
+              value-format="timestamp"
             >
             </el-date-picker>
           </div>
@@ -74,7 +75,7 @@
         <el-table-column prop="sex" label="性别" width="60" align="center">
         </el-table-column>
         <el-table-column
-          prop="id_card"
+          prop="certification"
           label="实名认证"
           width="80"
           align="center"
@@ -103,11 +104,7 @@
         </el-table-column>
         <el-table-column prop="name" label="操作" width="159" align="center">
           <template slot-scope="scope">
-            <el-button
-              @click.native.prevent="deleteRow(scope.$index, tableData4)"
-              type="text"
-              size="small"
-            >
+            <el-button @click="check(scope.row)" type="text" size="small">
               查看详情
             </el-button>
           </template>
@@ -151,8 +148,8 @@ export default {
       ],
       value1: "",
       value2: "",
-      value3: "全部",
-      value4: "",
+      value3: 0,
+      value4: [],
       //列表
       tableList: [],
       //分页器
@@ -164,60 +161,88 @@ export default {
   },
   mounted() {
     //获取列表数据
-    this.getAllList();
+    this.search();
   },
   methods: {
+      check(data) {
+      this.$router.push({
+        path: "/index/fangdongDetails",
+        query: {
+          data
+        }
+      });
+    },
     //切换每页显示记录数时触发
     handleSizeChange(val) {
       // console.log(val);
       this.pagesize = val;
-      this.getAllList();
+      this.search();
     },
     //切换当前页码时触发
     handleCurrentChange(val) {
       // console.log(val);
       this.pagenum = val;
-      this.getAllList();
+      this.search();
     },
     //搜索
     search() {
-      this.$axios({
-        url: "api/admin/landlords",
-        method: "get",
-        params: {
-          nickname: this.vaule1,
-          name: this.vaule2,
-          is_check: this.options.value
-        }
-      }).then(res => {
-        console.log(res);
-      });
+        this.$axios({
+            url:'/api/admin/landlords',
+            method: 'get',
+            params: {
+                page: this.pagenum,
+                page_rows: this.pagesize,
+                nickname: this.vaule1,
+                name: this.vaule2,
+                is_check: this.options.value,
+                start_time: this.value4[0],
+                end_time: this.value4[1]
+            }
+        }).then(res=>{
+            console.log(res);
+            this.tableList = res.data.data.list;
+            this.total = res.data.data.total;
+            this.page = res.data.data.page;
+            for (var i = 0; i < this.tableList.length; i++) {
+            this.tableList[i].sex =
+                this.tableList[i].sex == 1
+                ? "男"
+                : this.tableList == 2
+                ? "女"
+                : "未知";
+            this.tableList[i].certification =
+                this.tableList[i].id_card == "" ? "未认证" : "已认证";
+            this.tableList[i].status =
+                this.tableList[i].status == 1 ? "激活" : "停用";
+                this.tableList[i].is_partner=this.tableList[i].is_partner ==1 ? "是" :"否"
+            }
+        })
     },
     //获取列表是数据
-    getAllList() {
-      this.$axios({
-        url: "api/admin/landlords",
-        method: "get"
-      }).then(res => {
-        console.log(res);
-        this.tableList = res.data.data.list;
-        this.total = res.data.data.total;
-        this.page = res.data.data.page;
-        for (var i = 0; i < this.tableList.length; i++) {
-          this.tableList[i].sex =
-            this.tableList[i].sex == 1
-              ? "男"
-              : this.tableList == 2
-              ? "女"
-              : "未知";
-          this.tableList[i].id_card =
-            this.tableList[i].id_card == "" ? "未认证" : "已认证";
-          this.tableList[i].status =
-            this.tableList[i].status == 1 ? "激活" : "停用";
-            this.tableList[i].is_partner=this.tableList[i].is_partner ==1 ? "是" :"否"
-        }
-      });
-    }
+    // getAllList() {
+    //   this.$axios({
+    //     url: "api/admin/landlords",
+    //     method: "get"
+    //   }).then(res => {
+    //     console.log(res);
+    //     this.tableList = res.data.data.list;
+    //     this.total = res.data.data.total;
+    //     this.page = res.data.data.page;
+    //     for (var i = 0; i < this.tableList.length; i++) {
+    //       this.tableList[i].sex =
+    //         this.tableList[i].sex == 1
+    //           ? "男"
+    //           : this.tableList == 2
+    //           ? "女"
+    //           : "未知";
+    //       this.tableList[i].id_card =
+    //         this.tableList[i].id_card == "" ? "未认证" : "已认证";
+    //       this.tableList[i].status =
+    //         this.tableList[i].status == 1 ? "激活" : "停用";
+    //         this.tableList[i].is_partner=this.tableList[i].is_partner ==1 ? "是" :"否"
+    //     }
+    //   });
+    // }
   }
 };
 </script>
