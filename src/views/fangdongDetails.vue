@@ -176,7 +176,7 @@ export default {
     },
     mounted() {
         this.userInfo =this.$route.query.data;
-        this.isUse = this.userInfo.status === 1 ? false : true;
+        this.isUse = this.userInfo.status === '激活' ? false : true;
         this.$axios({
             url: '/api/admin/landlord',
             methods: 'get',

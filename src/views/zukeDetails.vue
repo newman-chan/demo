@@ -160,7 +160,7 @@ export default {
   mounted () {
     // console.log(this.$route.query.data);
     this.nameList =this.$route.query.data;
-    this.isUse = this.nameList.status === 1 ? false : true;
+    this.isUse = this.nameList.status === '激活' ? false : true;
     this.$axios({
         url: '/api/admin/tenant',
         methods: 'get',

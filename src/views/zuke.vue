@@ -210,7 +210,7 @@ export default {
           this.tableList[i].sex =
             this.tableList[i].sex == 1
               ? "男"
-              : this.tableList == 2
+              : this.tableList[i].sex == 2
               ? "女"
               : "未知";
           this.tableList[i].certification =

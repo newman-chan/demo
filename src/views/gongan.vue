@@ -8,8 +8,8 @@
     <div class="content">
       <!-- 搜索框 -->
       <div class="search">
-        <div class="box">待报备</div>
-        <div class="box">已报备</div>
+        <div class="box" @click="handleChoose(0)">待报备</div>
+        <div class="box" @click="handleChoose(1)">已报备</div>
         <span>
           <i>关键字搜索: </i>
           <input type="text" placeholder="请输入" v-model="value" />
@@ -20,7 +20,7 @@
     </div>
     <div class="forms">
       <!-- 表格 -->
-      <el-table :data="tableData"  border style="width: 100%">
+      <el-table :data="tableList"  border style="width: 100%">
         <el-table-column
           label="序号"
           width="50"
@@ -54,14 +54,14 @@
         <el-table-column prop="do" label="操作" width="159" align=center>
           <template slot-scope="scope">
             <el-button
-              @click.native.prevent="deleteRow(scope.$index, tableData4)"
+              @click="handleBtn(scope.row, 1)"
               type="text"
               size="small"
             >
               完成报备
             </el-button>
             <el-button
-              @click.native.prevent="deleteRow(scope.$index, tableData4)"
+              @click="handleBtn(scope.row, 2)"
               type="text"
               size="small"
             >
@@ -86,10 +86,10 @@
     <!-- 编辑备注 -->
       <div class="edit" v-if="show">
         <h1>备注信息</h1>
-        <textarea name="请填写保单信息" id="" cols="30" rows="6" placeholder="请填写备注信息"></textarea>
+        <textarea name="请填写保单信息" id="" cols="30" rows="6" placeholder="请填写备注信息" v-model="texts"></textarea>
         <div>
-          <div>保存</div>
-          <div>取消</div>
+          <div @click="handleSave(1)">保存</div>
+          <div @click="handleSave(2)">取消</div>
         </div>
       </div>
     </div>
@@ -102,6 +102,7 @@ export default {
     return {
       show:false,
       value: "",
+      is_report: 1,
       tableData: [
         {
           room: "物业名称-楼层-房间名称",
@@ -172,21 +173,95 @@ export default {
       pagesize: "",
       pagenum: 1,
       page: "",
+      id: '',
+      texts: ''
     };
   },
   methods: {
+      // 查询数据
+      search() {
+          this.$axios({
+              url: '/api/admin/reports',
+              method: 'get',
+              params: {
+                  page: this.pagenum,
+                  page_rows: this.pagesize,
+                  search: this.value1,
+                  is_report: this.is_report
+              }
+          }).then(res=>{
+              console.log(res);
+              this.tableList = res.data.data.list;
+              for (var i = 0; i < this.tableList.length; i++) {
+                this.tableList[i].sex =
+                    this.tableList[i].t_sex == 1
+                    ? "男"
+                    : this.tableList[i].t_sex == 2
+                    ? "女"
+                    : "未知";
+                this.tableList[i].is_report =
+                    this.tableList[i].is_report == 1 ? "是" : "否";
+              }
+          })
+      },
      //切换每页显示记录数时触发
     handleSizeChange(val) {
       // console.log(val);
       this.pagesize = val;
-      this.getList();
+      this.search();
     },
     //切换当前页码时触发
     handleCurrentChange(val) {
       // console.log(val);
       this.pagenum = val;
-      this.getList();
+      this.search();
+    },
+    // 报备按钮
+    handleChoose(index) {
+        this.is_report = index;
+        this.search();
+    },
+    // 列表操作
+    handleBtn(data, index) {
+        if(index == 1) {
+            this.$axios({
+                url: '/api/admin/report',
+                method: 'put',
+                data: {
+                    id: data.id,
+                    is_report: 1
+                }
+            }).then(res=>{
+                console.log(res)
+            })
+        }
+        if(index == 2) {
+            console.log(index);
+            this.id = data.id;
+            this.show = true;
+        }
+    },
+    // 提交备注
+    handleSave(index) {
+        if(index == 1) {
+            this.$axios({
+                url: '/api/admin/report',
+                method: 'post',
+                data: {
+                    id: this.id,
+                    report_remark: this.texts
+                }
+            }).then(res=>{
+                console.log(res)
+            })
+        }
+        if(index == 0) {
+            this.show = false;
+        }
     }
+  },
+  mounted() {
+      this.search()
   }
 };
 </script>

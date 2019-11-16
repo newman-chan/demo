@@ -15,7 +15,7 @@
       <div class="search">
         <div class="box" @click="insured(0)">待投保</div>
         <div class="box" @click="insured(1)">已投保</div>
-        <div class="box" @click="insured(1)">全部</div>
+        <div class="box" @click="insured(2)">全部</div>
         <span>
           <i>关键字搜索: </i>
           <input type="text" placeholder="请输入" v-model="value1" />
@@ -121,8 +121,8 @@
         <h1>保单信息</h1>
         <textarea name="请填写保单信息" id="" cols="30" rows="6" placeholder="请填写保单信息"></textarea>
         <div>
-          <div>保存</div>
-          <div>取消</div>
+          <div @click="handleEdit(1)">保存</div>
+          <div @click="handleEdit(2)">取消</div>
         </div>
       </div>
     </div>
@@ -154,6 +154,7 @@ export default {
       ],
       value: "全部",
       value1: "",
+      is_insured: 1,
       //列表
       tableList: [],
       //分页器
@@ -227,46 +228,55 @@ export default {
   },
   methods: {
     //编辑保单
-    edit() {
-    
+    edit(data) {
+        console.log(data);
+        this.show = true;
+    },
+    // 弹框操作
+    handleEdit(btn) {
+        if(btn === 1) {
+            // 保存
+            // 调用相关接口保存编辑信息
+        }
+        if(btn === 2) {
+            this.show = false;
+        }
+    },
+    // 查询数据
+    search() {
+        this.$axios({
+            url:'/api/admin/insurances',
+            method: 'get',
+            params: {
+                page: this.pagenum,
+                page_rows: this.pagesize,
+                search: this.value1,
+                is_insured: this.is_insured
+            }
+        }).then(res=>{
+            console.log(res)
+        })
     },
     //是否投保
     insured(key) {
-      if (key === 0) {
-        this.$axios({
-          url: "api/admin/insurances",
-          method: "get",
-          params: {
-            is_insured: key
-          }
-        });
-      } else if (key === 1) {
-        this.$axios({
-          url: "api/admin/insurances",
-          method: "get",
-          params: {
-            is_insured: key
-          }
-        });
-      } else {
-        this.$axios({
-          url: "api/admin/insurances",
-          method: "get"
-        });
-      }
+      this.is_insured = key;
+      this.search();
     },
     //切换每页显示记录数时触发
     handleSizeChange(val) {
       // console.log(val);
       this.pagesize = val;
-      this.getList();
+      this.search();
     },
     //切换当前页码时触发
     handleCurrentChange(val) {
       // console.log(val);
       this.pagenum = val;
-      this.getList();
+      this.search();
     }
+  },
+  mounted() {
+      this.search();
   }
 };
 </script>
