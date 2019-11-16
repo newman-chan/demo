@@ -186,7 +186,7 @@ export default {
               params: {
                   page: this.pagenum,
                   page_rows: this.pagesize,
-                  search: this.value1,
+                  search: this.value,
                   is_report: this.is_report
               }
           }).then(res=>{
@@ -252,10 +252,12 @@ export default {
                     report_remark: this.texts
                 }
             }).then(res=>{
+                this.show = false;
+                this.texts = '';
                 console.log(res)
             })
         }
-        if(index == 0) {
+        if(index == 2) {
             this.show = false;
         }
     }

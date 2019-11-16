@@ -1,6 +1,25 @@
 <!-- 消息通知 -->
 <template>
   <div class="message">
+      <div class="mask" v-show="isShow">
+        <div class="popup" v-if="edit">
+            <h1>填写消息内容</h1>
+            <textarea name="请填写保单信息" id="" cols="30" rows="6" placeholder="请描述本次发送内容" v-model="texts"></textarea>
+            <div>
+                <div @click="handleSave(1)">发布</div>
+                <div @click="handleSave(2)">取消</div>
+            </div>
+        </div>
+        <div class="popup" v-else>
+            <h1>消息内容</h1>
+            <span>
+                {{texts}}
+            </span>
+            <div>
+                <div @click="handleSave(2)">关闭</div>
+            </div>
+        </div>
+    </div>
     <!-- 面包屑 -->
     <div class="bread">
       消息通知
@@ -21,13 +40,14 @@
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
+              value-format="timestamp"
             >
             </el-date-picker>
           </div>
         </span>
         <span>搜 索</span>
       </div>
-      <div class="derive">发送通知</div>
+      <div class="derive" @click="handleMessage">发送通知</div>
     </div>
     <div class="forms">
       <!-- 表格 -->
@@ -47,21 +67,21 @@
         <el-table-column prop="name" label="操作" width="239" align=center>
            <template slot-scope="scope">
             <el-button
-              @click.native.prevent="deleteRow(scope.$index, tableData4)"
+              @click="handleBtn(scope.row,1)"
               type="text"
               size="small"
             >
               查看详情
             </el-button>
             <el-button
-              @click.native.prevent="deleteRow(scope.$index, tableData4)"
+              @click="handleBtn(scope.row,2)"
               type="text"
               size="small"
             >
               编辑
             </el-button>
             <el-button
-              @click.native.prevent="deleteRow(scope.$index, tableData4)"
+              @click="handleBtn(scope.row,3)"
               type="text"
               size="small"
             >
@@ -152,7 +172,7 @@ export default {
           tag: "公司"
         }
       ],
-      value:'',
+      value:[],
       value1:'', 
       //列表
       tableList: [],
@@ -160,7 +180,10 @@ export default {
       total: "",
       pagesize: "",
       pagenum:1,
-      page: ""
+      page: "",
+      isShow: false,
+      edit: true,
+      texts: ''
     };
   },
   methods: {
@@ -168,14 +191,86 @@ export default {
     handleSizeChange(val) {
       // console.log(val);
       this.pagesize = val;
-      this.getAllList();
+      this.search();
     },
     //切换当前页码时触发
     handleCurrentChange(val) {
       // console.log(val);
       this.pagenum = val;
-      this.getAllList()
+      this.search()
     },
+    search() {
+        this.$axios({
+            url:'/api/admin/notices',
+            method: 'get',
+            params: {
+                page: this.pagenum,
+                  page_rows: this.pagesize,
+                  search: this.value1,
+                  start_time: this.value[0],
+                  end_time: this.value[1]
+            }
+        }).then(res=>{
+            console.log(res);
+            this.tableData = res.data.data.list;
+        })
+    },
+    // 按钮操作
+    handleBtn(data,index) {
+        if(index === 1) {
+            console.log(data);
+            this.edit = false;
+            this.texts = data.body;
+            this.isShow = true;
+        }
+        if(index === 2) {
+            console.log(data);
+            this.edit = true;
+            this.texts = data.body;
+            this.isShow = true;
+        }
+        if(index === 3) {
+            console.log(data);
+            this.$axios({
+                url: '/api/admin/notice-up',
+                method: 'post',
+                data: {
+                    id: data.id,
+                    is_open: 0
+                }
+            }).then(res=>{
+                console.log(res)
+            })
+        }
+    },
+    // 发布消息弹框
+    handleMessage() {
+        this.edit = true;
+        this.isShow = true;
+    },
+    // 发布消息
+    handleSave(index) {
+        if(index == 1) {
+            this.$axios({
+                url: '/api/admin/notice',
+                method: 'post',
+                data: {
+                    body: this.texts
+                }
+            }).then(res=>{
+                this.isShow = false;
+                this.texts = '';
+                console.log(res)
+            })
+        }
+        if(index == 2) {
+            this.isShow = false;
+            this.texts = '';
+        }
+    }
+  },
+  mounted() {
+      this.search()
   }
 };
 </script>
@@ -202,7 +297,53 @@ export default {
 .message {
   width: 1100px;
   padding: 20px;
+  .mask {
+      position: fixed;
+      width: 100%;
+      top:0;
+      bottom: 0;
+      z-index: 100;
+      .popup{
+    width: 300px;
+    height:300px;
+    background-color: #fff;
+    position: absolute;
+    top: 200px;
+    left: 400px;
+    padding: 30px;
+    border: 1px solid #ccc;
 
+    h1{
+      padding-bottom: 10px;
+    }
+
+    textarea{
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    div{
+      font-size: 14px;
+      div{
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 4px;
+        border: 1px solid #000;
+        cursor: pointer;
+
+        &:first-child{
+          margin-right:20px;
+          color:#fff;
+          background-color: #77b79f;
+          border: none;
+        }
+        &:hover{
+          background-color: blue;
+        }
+      }
+    }
+  }
+  }
   .bread {
     font-size: 18px;
     font-weight: 700;
