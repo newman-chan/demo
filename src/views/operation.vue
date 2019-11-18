@@ -9,20 +9,54 @@
       <div>
         <span>一级分销</span>
         <span>奖励</span>
-        <input type="text" placeholder="    300        元" />
+        <input v-model="input1" type="text" :placeholder="one" />元
       </div>
       <div>
         <span>二级分销</span>
         <span>奖励</span>
-        <input type="text" placeholder="    100        元" />
+        <input v-model="input2" type="text" :placeholder="two" />元
       </div>
-      <div>保存</div>
+      <div @click="setMoney">保存</div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+    data() {
+        return {
+            one: '',
+            two: '',
+            input1: '',
+            input2: ''
+        }
+    },
+    mounted() {
+        this.$axios({
+            url: '/api/admin/distribution-ratio'
+        }).then(res=>{
+            console.log(res);
+            this.one = res.data.data.distribution_one_ratio;
+            this.two = res.data.data.distribution_two_ratio;
+        })
+    },
+    methods: {
+        setMoney() {
+            this.$axios({
+                url: '/api/admin/distribution-ratio',
+                method: 'post',
+                data: {
+                    distribution_one_ratio: this.input1,
+                    distribution_two_ratio: this.input2
+                }
+            }).then(res=>{
+                console.log(res);
+                this.input1 = '';
+                this.input2 = ''
+            })
+        }
+    }
+};
 </script>
 
 <style lang="less" scoped>
