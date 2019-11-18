@@ -19,11 +19,11 @@
         <div class="box2">
           <div>
             <span>昵称</span>
-            <span>是的方式方法家</span>
+            <span>{{info.username}}</span>
           </div>
           <div>
             <span>手机号</span>
-            <span>是的方式方法家</span>
+            <span>{{info.phone}}</span>
           </div>
           <div>
             <span>性别</span>
@@ -31,7 +31,7 @@
           </div>
           <div>
             <span>创建时间</span>
-            <span>是的方式方法家</span>
+            <span>{{info.create_time}}</span>
           </div>
         </div>
         <div class="box2">
@@ -41,7 +41,7 @@
           </div>
           <div>
             <span>邮箱</span>
-            <span>是的方式方法家</span>
+            <span>{{info.email}}</span>
           </div>
           <div>
             <span>角色名称</span>
@@ -53,21 +53,111 @@
           </div>
         </div>
       </div>
-      <div class="save">
+      <div class="save" @click="showPopup">
         修改密码
       </div>
+    </div>
+    <div class="mask" v-show="isShow">
+        <div class="popup">
+            <h1>修改样式</h1>
+            <input type="password" v-model="pwd"/>
+            <div>
+                <div @click="handleSave(1)">保存</div>
+                <div @click="handleSave(2)">取消</div>
+            </div>
+        </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+    data() {
+        return {
+            info: {},
+            isShow: false,
+            pwd: ''
+        }
+    },
+    mounted() {
+        this.$axios({
+            url:'/api/admin/admin-info'
+        }).then(res=>{
+            console.log(res);
+            this.info = res.data.data
+        })
+    },
+    methods: {
+        handleSave(index) {
+            if(index === 1) {
+                this.$axios({
+                    url: '/api/admin/admin-pwd',
+                    method: 'post',
+                    data: {
+                        pwd: this.pwd
+                    }
+                }).then(res=>{
+                    console.log(res)
+                })
+            }
+            if(index === 2) {
+                this.showPopup()
+            }
+        },
+        showPopup() {
+            this.isShow = !this.isShow;
+        }
+    }
+};
 </script>
 
 <style lang="less" scoped>
 .account {
   // width: 1100px;
   padding: 20px;
+
+  .mask {
+      position: fixed;
+      width: 100%;
+      top:0;
+      bottom: 0;
+      z-index: 100;
+      .popup{
+    width: 300px;
+    height:300px;
+    background-color: #fff;
+    position: absolute;
+    top: 200px;
+    left: 400px;
+    padding: 30px;
+    border: 1px solid #ccc;
+
+    h1{
+      padding-bottom: 10px;
+    }
+
+    div{
+      font-size: 14px;
+      div{
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 4px;
+        border: 1px solid #000;
+        cursor: pointer;
+
+        &:first-child{
+          margin-right:20px;
+          color:#fff;
+          background-color: #77b79f;
+          border: none;
+        }
+        &:hover{
+          background-color: blue;
+        }
+      }
+    }
+  }
+  }
 
   .bread {
     font-size: 18px;
