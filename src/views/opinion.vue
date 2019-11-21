@@ -142,7 +142,8 @@ export default {
       pagesize: "",
       pagenum:1,
       page: "",
-      isShow: false
+      isShow: false,
+      message: ''
     }
   },
   methods: {
