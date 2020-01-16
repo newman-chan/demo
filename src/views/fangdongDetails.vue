@@ -17,7 +17,7 @@
       <div class="admin">
         <div class="box1">
           <div class="head">
-              <img :src="userInfo.avatar" alt="">
+            <img :src="userInfo.avatar" alt="" />
           </div>
           <div class="change">
             管理员1
@@ -29,25 +29,25 @@
         <div class="box2">
           <div>
             <span>昵称</span>
-            <span>{{userInfo.nickname}}</span>
+            <span>{{ userInfo.nickname }}</span>
           </div>
           <div>
             <span>生日</span>
-            <span>{{userInfo.birthday}}</span>
+            <span>{{ userInfo.birthday }}</span>
           </div>
           <div>
             <span>性别</span>
-            <span>{{userInfo.sex}}</span>
+            <span>{{ userInfo.sex }}</span>
           </div>
           <div>
             <span>身份证号码</span>
-            <span>{{userInfo.id_card}}</span>
+            <span>{{ userInfo.id_card }}</span>
           </div>
         </div>
         <div class="box2">
           <div>
             <span>手机号</span>
-            <span>{{userInfo.phone}}</span>
+            <span>{{ userInfo.phone }}</span>
           </div>
           <div>
             <span>年龄</span>
@@ -55,36 +55,31 @@
           </div>
           <div>
             <span>注册时间</span>
-            <span>{{userInfo.create_time}}</span>
+            <span>{{ userInfo.create_time }}</span>
           </div>
           <div>
             <span>合伙人有效期</span>
-            <span>{{userInfo.partner_expire_time}}</span>
+            <span>{{ userInfo.partner_expire_time }}</span>
           </div>
         </div>
       </div>
       <div class="middle">
         <div>
           <span class="rise">账户余额</span>
-          <span>{{userInfo.balance}}</span>
+          <span>{{ userInfo.balance }}</span>
           <span class="rise">共惠金币</span>
-          <span>{{userInfo.gold}}</span>
+          <span>{{ userInfo.gold }}</span>
         </div>
         <div>
           <span class="rise">物业数量</span>
-          <span>{{userData.total.property_count}}</span>
+          <span>{{ userData.total.property_count }}</span>
           <span class="rise">房间数量</span>
-          <span>{{userData.total.room_count}}</span>
+          <span>{{ userData.total.room_count }}</span>
         </div>
       </div>
       <el-table :data="userData.list" type="index" border style="width: 100%">
         <el-table-column label="物业信息">
-          <el-table-column
-            type="index"
-            label="序号"
-            width="50"
-            align="center"
-          >
+          <el-table-column type="index" label="序号" width="50" align="center">
           </el-table-column>
           <el-table-column
             prop="date"
@@ -152,42 +147,42 @@
 
 <script>
 export default {
-    data() {
-        return {
-            userInfo: {},
-            userData: {},
-            isUse: false
+  data() {
+    return {
+      userInfo: {},
+      userData: {},
+      isUse: false
+    };
+  },
+  methods: {
+    handleUse(type) {
+      this.$axios({
+        url: "/api/admin/landlord",
+        method: "post",
+        data: {
+          uid: this.userInfo.id,
+          type: type
         }
-    },
-    methods: {
-        handleUse(type) {
-          this.$axios({
-              url: '/api/admin/landlord',
-              method: 'post',
-              data: {
-                  uid: this.userInfo.id,
-                  type: type
-              } 
-          }).then(res=>{
-              console.log(res);
-              this.isUse = !this.isUse;
-          })
-      }
-    },
-    mounted() {
-        this.userInfo =this.$route.query.data;
-        this.isUse = this.userInfo.status === '激活' ? false : true;
-        this.$axios({
-            url: '/api/admin/landlord',
-            methods: 'get',
-            params: {
-                landlord_id: this.userInfo.landlord_id
-            }
-        }).then(res=>{
-            console.log(res);
-            this.userData = res.data.data;
-        })
+      }).then(res => {
+        console.log(res);
+        this.isUse = !this.isUse;
+      });
     }
+  },
+  mounted() {
+    this.userInfo = this.$route.query.data;
+    this.isUse = this.userInfo.status === "激活" ? false : true;
+    this.$axios({
+      url: "/api/admin/landlord",
+      methods: "get",
+      params: {
+        landlord_id: this.userInfo.landlord_id
+      }
+    }).then(res => {
+      console.log(res);
+      this.userData = res.data.data;
+    });
+  }
 };
 </script>
 

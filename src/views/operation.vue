@@ -23,39 +23,39 @@
 
 <script>
 export default {
-    data() {
-        return {
-            one: '',
-            two: '',
-            input1: '',
-            input2: ''
+  data() {
+    return {
+      one: "",
+      two: "",
+      input1: "",
+      input2: ""
+    };
+  },
+  mounted() {
+    this.$axios({
+      url: "/api/admin/distribution-ratio"
+    }).then(res => {
+      console.log(res);
+      this.one = res.data.data.distribution_one_ratio;
+      this.two = res.data.data.distribution_two_ratio;
+    });
+  },
+  methods: {
+    setMoney() {
+      this.$axios({
+        url: "/api/admin/distribution-ratio",
+        method: "post",
+        data: {
+          distribution_one_ratio: this.input1,
+          distribution_two_ratio: this.input2
         }
-    },
-    mounted() {
-        this.$axios({
-            url: '/api/admin/distribution-ratio'
-        }).then(res=>{
-            console.log(res);
-            this.one = res.data.data.distribution_one_ratio;
-            this.two = res.data.data.distribution_two_ratio;
-        })
-    },
-    methods: {
-        setMoney() {
-            this.$axios({
-                url: '/api/admin/distribution-ratio',
-                method: 'post',
-                data: {
-                    distribution_one_ratio: this.input1,
-                    distribution_two_ratio: this.input2
-                }
-            }).then(res=>{
-                console.log(res);
-                this.input1 = '';
-                this.input2 = ''
-            })
-        }
+      }).then(res => {
+        console.log(res);
+        this.input1 = "";
+        this.input2 = "";
+      });
     }
+  }
 };
 </script>
 
@@ -66,35 +66,34 @@ export default {
     font-size: 18px;
     font-weight: 700;
   }
-  .conter{
+  .conter {
     font-size: 16px;
-    div{
+    div {
       padding-top: 20px;
 
-      span:first-child{
+      span:first-child {
         padding-right: 60px;
       }
-      span:nth-child(2){
+      span:nth-child(2) {
         padding-right: 30px;
       }
-      input{
+      input {
         width: 120px;
         height: 30px;
       }
-      &:last-child{
+      &:last-child {
         height: 30px;
         width: 72px;
         text-align: center;
         line-height: 30px;
         background-color: #77b79f;
         margin-top: 20px;
-        padding-top:0;
+        padding-top: 0;
         color: #fff;
         cursor: pointer;
         border-radius: 4px;
       }
     }
-    
   }
 }
 </style>
