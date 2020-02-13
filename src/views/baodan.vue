@@ -5,7 +5,7 @@
     <div class="bread">
       保单管理
     </div>
-    <div class="content" style="width:1190px">
+    <div class="content" style="width:1270px">
       <div class="money">
         <span>租客保费金额 : </span>
         <i>{{pay}}元</i>
@@ -34,7 +34,7 @@
     </div>
     <div class="forms">
       <!-- 表格 -->
-      <el-table :data="tableData" border style="width:1190px">
+      <el-table :data="tableData" border style="width:1270px">
         <el-table-column label="序号" width="50" align="center" type="index">
         </el-table-column>
         <el-table-column prop="room" label="签约房间" width="180" align="center">
@@ -53,7 +53,7 @@
         </el-table-column>
         <el-table-column prop="is_insured" label="是否投保" width="80" align="center">
         </el-table-column>
-        <el-table-column prop="ri_number" label="保单信息" width="100" align="center">
+        <el-table-column prop="ri_number" label="保单信息" width="180" align="center">
         </el-table-column>
         <el-table-column prop="do" label="操作" width="159" align="center">
           <template slot-scope="scope">
@@ -247,8 +247,6 @@ export default {
     //编辑保单发送请求按钮
     edit() {
 
-      this.editForm.number = parseInt(this.editForm.number)
-      console.log(this.editForm);
 
       // 再次进行用户数据的验证
       this.$refs.editForm.validate(valid => {
@@ -296,7 +294,6 @@ export default {
     },
     //新增保单发送请求按钮
     add() {
-      this.addForm.number = parseInt(this.addForm.number)
 
       // 再次进行用户数据的验证
       this.$refs.addForm.validate(valid => {

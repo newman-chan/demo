@@ -9,7 +9,7 @@
       <!-- 搜索框 -->
       <div class="search">
         <span>
-          <i>关键字: </i>
+          <i>消息内容搜索: </i>
           <input type="text" placeholder="请输入" v-model="value1" />
           <el-button style="margin-left:10px" type="primary" icon="el-icon-search" size="small" @click="keySear">搜索</el-button>
         </span>
