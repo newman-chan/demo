@@ -4,14 +4,14 @@
     <div class="head">
       <!-- 面包屑 -->
       <div class="bread">
-        房东详情
+        房东详情{{userInfo.status}}
       </div>
-      <div class="right-btn" @click="handleUse(1)" v-if="isUse">
+      <!-- <div class="right-btn" @click="handleUse(1)" v-if="isUse ==1">
         启用账户
       </div>
-      <div class="right-btn" @click="handleUse(0)" v-else>
+      <div class="right-btn" @click="handleUse(0)" v-if="isUse ==0">
         停用账户
-      </div>
+      </div> -->
     </div>
     <div class="container">
       <div class="admin">
@@ -54,7 +54,7 @@
           </div>
           <div>
             <span>年龄</span>
-            <span></span>
+            <span>{{ userInfo.age }}岁</span>
           </div>
           <div>
             <span>注册时间</span>
@@ -119,7 +119,7 @@ export default {
     return {
       userInfo: {},
       userData: {},
-      isUse: false
+      isUse: ''
     };
   },
   methods: {
@@ -143,14 +143,26 @@ export default {
         }
       }).then(res => {
         console.log(res);
-        this.isUse = !this.isUse;
+        if(res.data.code ==200){
+          console.log(123);
+          
+          this.$message({
+            type: 'success',
+            message: res.data.message
+          })
+          this.isUse =!this.isUse
+        }
       });
     }
   },
   mounted() {
     this.userInfo = JSON.parse(this.$route.query.data);
     console.log(this.userInfo);
-
+    // if(this.userInfo.status =='激活'){
+    //   this.isUse ==0
+    // }else{
+    //   this.isUse ==1
+    // }
     this.isUse = this.userInfo.status === "激活" ? false : true;
     this.$axios({
       url: "/api/admin/landlord",

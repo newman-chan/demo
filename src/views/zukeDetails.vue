@@ -6,12 +6,12 @@
       <div class="bread">
         租客详情
       </div>
-      <div class="right-btn" @click="handleUse(1)" v-if="isUse">
+      <!-- <div class="right-btn" @click="handleUse(1)" v-if="isUse ==1">
         启用账户
       </div>
-      <div class="right-btn" @click="handleUse(0)" v-else>
+      <div class="right-btn" @click="handleUse(0)" v-if="isUse ==0">
         停用账户
-      </div>
+      </div> -->
     </div>
     <div class="container">
       <div class="admin">
@@ -54,7 +54,7 @@
           </div>
           <div>
             <span>年龄</span>
-            <span></span>
+            <span>{{nameList.age}}岁</span>
           </div>
           <div>
             <span>注册时间</span>
@@ -102,7 +102,7 @@ export default {
     return {
       nameList: {},
       tableData: [],
-      isUse: false
+      isUse: ''
     }
   },
   methods: {
@@ -124,7 +124,11 @@ export default {
     // console.log(this.$route.query.data);
     this.nameList = JSON.parse(this.$route.query.data);
     console.log(this.nameList);
-    
+    // if(this.nameList.status =='激活'){
+    //   this.isUse ==0
+    // }else{
+    //   this.isUse ==1
+    // }
     this.isUse = this.nameList.status === '激活' ? false : true;
     this.$axios({
       url: '/api/admin/tenant',
