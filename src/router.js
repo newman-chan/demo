@@ -7,7 +7,8 @@ import VueRouter from "vue-router";
 import Login from "@/views/login.vue";
 import Index from "@/views/index.vue";
 import Home from "@/views/home.vue";
-import Zuke from "@/views/zuke.vue";
+import Count from "@/views/count.vue";
+import Tenant from "@/views/tenant.vue";
 import ZukeDetails from "@/views/zukeDetails.vue";
 import Fangdong from "@/views/fangdong.vue";
 import FangdongDetails from "@/views/fangdongDetails.vue";
@@ -20,11 +21,16 @@ import Management from "@/views/management.vue";
 import Account from "@/views/account.vue";
 import Opinion from "@/views/opinion.vue";
 import Interface from "@/views/interface.vue";
+import About from "@/views/about.vue";
 import Pay from "@/views/pay.vue";
+import User from "@/views/user.vue";
+import Roles from "@/views/roles.vue";
+import Tixian from "@/views/tixian.vue";
 
 Vue.use(VueRouter);
 //创建路由模块
 var router = new VueRouter({
+  mode:'history',
   routes: [
     // 添加重定向
     {path:'/', redirect: '/login'},
@@ -48,11 +54,17 @@ var router = new VueRouter({
           path: "home",
           component: Home
         },
+        // 数据统计
+        {
+          name: "Count",
+          path: "count",
+          component: Count
+        },
         // 租客管理
         {
-          name: "Zuke",
-          path: "zuke",
-          component: Zuke
+          name: "Tenant",
+          path: "tenant",
+          component: Tenant
         },
         // 租客详情
         {
@@ -63,7 +75,7 @@ var router = new VueRouter({
         // 房东详情
         {
           name: "Fangdong",
-          path: "fangdong",
+          path: "landlord",
           component: Fangdong
         },
         //房东详情
@@ -81,25 +93,25 @@ var router = new VueRouter({
         // 保单管理
         {
           name: "Baodan",
-          path: "baodan",
+          path: "insurance",
           component: Baodan
         },
         // 公安报备
         {
           name: "Gongan",
-          path: "gongan",
+          path: "report",
           component: Gongan
         },
         // 消息通知
         {
           name: "Message",
-          path: "message",
+          path: "notice",
           component: Message
         },
         // 运营设置
         {
           name: "Operation",
-          path: "operation",
+          path: "config",
           component: Operation
         },
         // 管理员
@@ -120,6 +132,24 @@ var router = new VueRouter({
           path: "opinion",
           component: Opinion
         },
+        // 关于我们
+        {
+          name: "About",
+          path: "about",
+          component: About
+        },
+        // 用户管理
+        {
+          name: "User",
+          path: "user",
+          component: User
+        },
+        // 角色管理
+        {
+          name: "Roles",
+          path: "roles",
+          component: Roles
+        },
         // 接口管理
         {
           name: "Interface",
@@ -127,6 +157,12 @@ var router = new VueRouter({
           component: Interface
         },
         //充值
+        {
+          name: "Tixian",
+          path: "withdrawal",
+          component: Tixian
+        },
+        //提现
         {
           name: "Pay",
           path: "pay",

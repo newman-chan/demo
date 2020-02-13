@@ -26,7 +26,9 @@ $axios.interceptors.request.use(
 $axios.interceptors.response.use(
   res => {
     //对响应数据做些事
-
+    if(res.data.code==401){
+      window.location.href = document.location.origin + "/login"
+    }
     return res;
   },
   error => {

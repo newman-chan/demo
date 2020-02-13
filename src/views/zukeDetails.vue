@@ -20,10 +20,13 @@
             <img :src="nameList.avatar" alt="">
           </div>
           <div class="change">
-            管理员1
+            {{nameList.nickname}}
           </div>
-          <div class="change check">
+          <div class="change check" v-if="nameList.certification=='已认证'">
             已实名认证
+          </div>
+          <div class="change check" style="background-color:red" v-if="nameList.certification=='未认证'">
+            未实名认证
           </div>
         </div>
         <div class="box2">
@@ -51,7 +54,7 @@
           </div>
           <div>
             <span>年龄</span>
-            <span>22岁</span>
+            <span></span>
           </div>
           <div>
             <span>注册时间</span>
@@ -63,65 +66,25 @@
           </div>
         </div>
       </div>
-      <el-table :data="tableData" type="index" border style="width: 100%">
+      <el-table :data="tableData" type="index" border style="width: 1299px">
         <el-table-column label="租房信息">
-          <el-table-column
-            type="index"
-            label="序号"
-            width="50"
-            align="center"
-          >
+          <el-table-column type="index" label="序号" width="50" align="center">
           </el-table-column>
-          <el-table-column
-            prop="room_title"
-            label="签约房间"
-            width="180"
-            align="center"
-          >
+          <el-table-column prop="room_title" label="签约房间" width="180" align="center">
           </el-table-column>
-          <el-table-column
-            prop="name"
-            label="房东姓名"
-            width="90"
-            align="center"
-          >
+          <el-table-column prop="name" label="房东姓名" width="90" align="center">
           </el-table-column>
-          <el-table-column
-            prop="address"
-            label="房东手机号"
-            width="120"
-            align="center"
-          >
+          <el-table-column prop="phone" label="房东手机号" width="120" align="center">
           </el-table-column>
-          <el-table-column prop="name" label="房东身份证" width="160" align="center">
+          <el-table-column prop="id_card" label="房东身份证" width="160" align="center">
           </el-table-column>
-          <el-table-column
-            prop="start_time"
-            label="起租时间"
-            width="110"
-            align="center"
-          >
+          <el-table-column prop="start_time" label="起租时间" width="110" align="center">
           </el-table-column>
-          <el-table-column
-            prop="end_time"
-            label="到租时间"
-            width="110"
-            align="center"
-          >
+          <el-table-column prop="end_time" label="到租时间" width="110" align="center">
           </el-table-column>
-          <el-table-column
-            prop="name"
-            label="是否报备"
-            width="80"
-            align="center"
-          >
+          <el-table-column prop="is_report" label="是否报备" width="80" align="center">
           </el-table-column>
-          <el-table-column
-            prop="is_insured"
-            label="是否投保"
-            width="80"
-            align="center"
-          >
+          <el-table-column prop="is_insured" label="是否投保" width="80" align="center">
           </el-table-column>
           <el-table-column prop="insured_remark" label="保单信息" width="159" align="center">
           </el-table-column>
@@ -135,47 +98,56 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
-      nameList:{},
+      nameList: {},
       tableData: [],
       isUse: false
     }
   },
   methods: {
-      handleUse(type) {
-          this.$axios({
-              url: '/api/admin/tenant',
-              method: 'post',
-              data: {
-                  uid: this.nameList.id,
-                  type: type
-              } 
-          }).then(res=>{
-              console.log(res);
-              this.isUse = !this.isUse;
-          })
-      }
+    handleUse(type) {
+      this.$axios({
+        url: '/api/admin/tenant',
+        method: 'post',
+        data: {
+          uid: this.nameList.id,
+          type: type
+        }
+      }).then(res => {
+        console.log(res);
+        this.isUse = !this.isUse;
+      })
+    }
   },
-  mounted () {
+  mounted() {
     // console.log(this.$route.query.data);
-    this.nameList =this.$route.query.data;
+    this.nameList = JSON.parse(this.$route.query.data);
+    console.log(this.nameList);
+    
     this.isUse = this.nameList.status === '激活' ? false : true;
     this.$axios({
-        url: '/api/admin/tenant',
-        methods: 'get',
-        params: {
-            tenant_id: this.nameList.tenant_id
-        }
-    }).then(res=>{
-        console.log(res)
-        res.data.data.list.forEach((v,i)=>{
-            this.tableData.push(v);
-            this.tableData[i].is_insured =
-                this.tableData[i].is_insured == 1 ? '是' : '否';
-            this.tableData[i].status = 
-                this.tableData[i].status == 1 ? '租房中' : this.tableData[i].status == 2 ? '申请中' : this.tableData[i].status == 3 ? '已退租' : '已拒绝'
-        })
+      url: '/api/admin/tenant',
+      methods: 'get',
+      params: {
+        tenant_id: this.nameList.tenant_id,
+        page_rows:200
+      }
+    }).then(res => {
+      console.log(res)
+      res.data.data.list.forEach((v, i) => {
+        this.tableData.push(v);
+        this.tableData[i].room_title = this.tableData[i].property_title +'-'+ this.tableData[i].floor +'-'+ this.tableData[i].room_title
+        this.tableData[i].start_time =  this.tableData[i].start_time.split(' ')[0]
+        this.tableData[i].end_time =  this.tableData[i].end_time.split(' ')[0]
+        this.tableData[i].is_insured =
+          this.tableData[i].is_insured == 1 ? '是' : '否';
+        this.tableData[i].status =
+          this.tableData[i].status == 1 ? '租房中' : this.tableData[i].status == 2 ? '申请中' : this.tableData[i].status == 3 ? '已退租' : '已拒绝'
+          this.tableData[i].is_report = this.tableData[i].is_report==1 ? '是' : '否'
+      })
+      console.log(this.tableData);
+      
     })
   }
 };

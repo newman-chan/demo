@@ -18,6 +18,7 @@
           </el-form-item>
           <el-form-item label="" prop="password">
             <el-input
+            type='password'
               v-model="loginForm.password"
               placeholder="请输入登录密码"
               prefix-icon="iconfont icon-suo"
@@ -66,10 +67,10 @@ export default {
             }
           })
             .then(res => {
-              // console.log(res);
+              console.log(res);
               //存储token
               localStorage.setItem("picc_token", res.data.data.authorization);
-              
+              localStorage.setItem('admin_user',JSON.stringify(res.data.data.admin_user))
               if (res.data.code === 400) {
                 //如果错误,弹出提示
                 this.$message({
