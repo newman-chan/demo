@@ -16,7 +16,7 @@
         </span>
         <el-button type="primary" icon="el-icon-search" size="small" @click="sear">搜索</el-button>
       </div>
-      <div class="derive">导出Excel</div>
+      <!-- <div class="derive">导出Excel</div> -->
     </div>
     <div class="forms">
       <!-- 表格 -->

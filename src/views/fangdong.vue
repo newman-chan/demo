@@ -26,7 +26,7 @@
         <el-date-picker v-model="time" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" value-format="timestamp" style="width:240px" size="small">
         </el-date-picker>
         <el-button slot="append" icon="el-icon-search" size="small" style="margin-bottom:3px;margin-left:10px" @click="timeBtn"></el-button>
-        <el-button type="info" style="margin-left:50px">导出Excel</el-button>
+        <!-- <el-button type="info" style="margin-left:50px">导出Excel</el-button> -->
       </div>
     </div>
     <div class="forms">

@@ -36,7 +36,7 @@
       <el-button size="small" round>已转账</el-button>
     </div> -->
     <!-- 表格 -->
-    <el-table :data="userList" border style="width: 100%;margin-top:15px">
+    <el-table :data="userList" border style="width: 1500px;margin-top:15px">
       <!-- <el-table-column type="id" width="50"></el-table-column> -->
       <el-table-column type="index" width="50" align='center' label="序号">
       </el-table-column>
