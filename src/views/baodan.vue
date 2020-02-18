@@ -47,20 +47,23 @@
         </el-table-column>
         <el-table-column prop="t_id_card" label="租客身份证号" width="180" align="center">
         </el-table-column>
-        <el-table-column prop="start_time" label="起租时间" width="100" align="center">
+        <el-table-column prop="rent_start_time" label="起租时间" width="100" align="center">
         </el-table-column>
-        <el-table-column prop="end_time" label="到租时间" width="100" align="center">
+        <el-table-column prop="rent_end_time" label="到租时间" width="100" align="center">
         </el-table-column>
-        <el-table-column prop="is_insured" label="是否投保" width="80" align="center">
+        <el-table-column prop="insurance_id" label="是否投保" width="80" align="center">
+          <template slot-scope="scope">
+            <span>{{scope.row.insurance_id > 0 ? '是' : '否'}}</span>
+          </template>
         </el-table-column>
         <el-table-column prop="ri_number" label="保单信息" width="180" align="center">
         </el-table-column>
         <el-table-column prop="do" label="操作" width="159" align="center">
           <template slot-scope="scope">
-            <el-button @click="addBtn(scope.row)" type="text" size="small" v-if="scope.row.is_insured=='否'">
+            <el-button @click="addBtn(scope.row)" type="text" size="small" v-if="scope.row.insurance_id==null">
               新增保单
             </el-button>
-            <el-button @click="editBtn(scope.row)" type="text" size="small" v-if="scope.row.is_insured=='是'">
+            <el-button @click="editBtn(scope.row)" type="text" size="small" v-if="scope.row.insurance_id >0">
               编辑保单
             </el-button>
           </template>
@@ -208,8 +211,8 @@ export default {
   },
   methods: {
     //搜索
-    sear(){
-      this.is_insured=''
+    sear() {
+      this.is_insured = ''
       this.search()
     },
     payBtn() {
@@ -383,7 +386,6 @@ export default {
                 : "未知";
           this.tableData[i].start_time = this.tableData[i].start_time.split(' ')[0]
           this.tableData[i].end_time = this.tableData[i].end_time.split(' ')[0]
-          this.tableData[i].is_insured = this.tableData[i].is_insured == 0 ? '否' : '是'
         }
       })
     },
