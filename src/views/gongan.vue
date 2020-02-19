@@ -12,11 +12,11 @@
         <el-button size="small" round @click="handleChoose(1)">已报备</el-button>
         <span style="margin-right:10px">
           <i>签约房间搜索: </i>
-          <input type="text" placeholder="请输入" v-model="value" />
+          <input type="text" placeholder="请输入" v-model="value" style="border: 1px solid #d2d2d2" />
         </span>
         <el-button type="primary" icon="el-icon-search" size="small" @click="sear">搜索</el-button>
       </div>
-      <!-- <div class="derive">导出Excel</div> -->
+      <el-button type="info" style="margin-left:50px" @click="exportBtn">导出Excel</el-button>
     </div>
     <div class="forms">
       <!-- 表格 -->
@@ -52,7 +52,7 @@
             <el-button @click="handleBtn(scope.row, 1)" type="text" size="small" v-if="scope.row.is_report=='否'">
               完成报备
             </el-button>
-            <el-button  type="text" size="small" style="color:#b1b1b1;text-decoration:underline;cursor:default" v-if="scope.row.is_report=='是'">
+            <el-button type="text" size="small" style="color:#b1b1b1;text-decoration:underline;cursor:default" v-if="scope.row.is_report=='是'">
               完成报备
             </el-button>
             <el-button @click="handleBtn(scope.row, 2)" type="text" size="small">
@@ -98,9 +98,27 @@ export default {
     };
   },
   methods: {
+    //导出
+    exportBtn() {
+      this.$axios({
+        url: '/api/admin/export/init',
+        params: {
+          export_code: 'report'
+        }
+      }).then(res => {
+        console.log(res);
+        if (res.data.code == 200) {
+          window.location.href = res.data.data.url
+          this.$message({
+            message: res.data.message,
+            type: 'success'
+          });
+        }
+      })
+    },
     //搜索
-    sear(){
-      this.is_report =''
+    sear() {
+      this.is_report = ''
       this.search()
     },
     // 查询数据
@@ -119,7 +137,7 @@ export default {
         this.total = res.data.data.total
         this.tableList = res.data.data.list;
         for (var i = 0; i < this.tableList.length; i++) {
-          this.tableList[i].r_title =this.tableList[i].p_title +'-'+this.tableList[i].floor +'-'+this.tableList[i].r_title
+          this.tableList[i].r_title = this.tableList[i].p_title + '-' + this.tableList[i].floor + '-' + this.tableList[i].r_title
           this.tableList[i].start_time = this.tableList[i].start_time.split(' ')[0]
           this.tableList[i].end_time = this.tableList[i].end_time.split(' ')[0]
           this.tableList[i].sex =
@@ -148,7 +166,7 @@ export default {
     // 报备按钮
     handleChoose(index) {
       this.is_report = index;
-      this.value=''
+      this.value = ''
       this.search();
     },
     // 列表操作

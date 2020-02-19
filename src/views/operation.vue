@@ -43,27 +43,27 @@
     <h2>共惠金币奖励设置</h2>
     <div class="conter">
       <div>
-        <span style="padding-right:180px">实名认证</span>
+        <span style="padding-right:210px">实名认证</span>
         <span>奖励</span>
         <input v-model="input7" type="text" :placeholder="one" />金币
       </div>
       <div>
-        <span style="padding-right:180px">每日登陆</span>
+        <span style="padding-right:210px">每日登陆</span>
         <span>奖励</span>
         <input v-model="input8" type="text" :placeholder="two" />金币
       </div>
       <div>
-        <span style="padding-right:122px">成功入住1个房间</span>
+        <span style="padding-right:120px">每次成功入住1个房间</span>
         <span>奖励</span>
         <input v-model="input9" type="text" :placeholder="two" />金币
       </div>
       <div>
-        <span style="padding-right:118px">完成单笔账单支付</span>
+        <span style="padding-right:50px">每次完成账单支付且未购买保险</span>
         <span>奖励</span>
         <input v-model="input10" type="text" :placeholder="two" />金币
       </div>
       <div>
-        <span style="padding-right:36px">完成单笔账单支付且购买保险</span>
+        <span style="padding-right:66px">每次完成账单支付且购买保险</span>
         <span>奖励</span>
         <input v-model="input11" type="text" :placeholder="two" />金币
       </div>
@@ -165,6 +165,8 @@ export default {
       input {
         width: 120px;
         height: 30px;
+        border: 1px solid #d2d2d2 !important;
+
       }
     }
   }

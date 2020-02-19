@@ -18,7 +18,7 @@
         <el-button size="small" round @click="insured(2)">全部</el-button>
         <span style="padding-right:10px;padding-left:40px">
           <i>签约房间搜索: </i>
-          <input type="text" placeholder="请输入" v-model="value1" />
+          <input type="text" placeholder="请输入" v-model="value1" style="border: 1px solid #d2d2d2" />
         </span>
         <el-button type="primary" icon="el-icon-search" size="small" @click="sear">搜索</el-button>
         <!-- <span class="">
@@ -29,7 +29,7 @@
           </el-select>
         </span> -->
       </div>
-
+      <el-button type="info" style="margin-left:50px" @click="exportBtn">导出Excel</el-button>
       <!-- <div class="derive">导出Excel</div> -->
     </div>
     <div class="forms">
@@ -210,6 +210,24 @@ export default {
     };
   },
   methods: {
+    //导出
+    exportBtn() {
+      this.$axios({
+        url: '/api/admin/export/init',
+        params: {
+          export_code: 'insurance'
+        }
+      }).then(res => {
+        console.log(res);
+        if (res.data.code == 200) {
+          window.location.href = res.data.data.url
+          this.$message({
+            message: res.data.message,
+            type: 'success'
+          });
+        }
+      })
+    },
     //搜索
     sear() {
       this.is_insured = ''
